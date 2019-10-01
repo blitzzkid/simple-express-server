@@ -1,10 +1,11 @@
 const request = require("supertest");
 const app = require("./app");
 
-describe("test", () => {
-  it("GET should return the status code 200", () => {
+describe("A simple Express server", () => {
+  it("GET / should return the status code 200", () => {
     return request(app)
-      .get("/books")
-      .expect(200);
+      .get("/")
+      .expect(200)
+      .expect("Visit the books again");
   });
 });

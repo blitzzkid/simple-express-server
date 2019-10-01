@@ -13,9 +13,10 @@
     "supertest": "^4.0.2"
   },
   "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
     "start": "node index.js",
-    "start:dev": "nodemon index.js",
-    "test": "jest"
+    "start:dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC"
