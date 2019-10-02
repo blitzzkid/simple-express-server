@@ -23,4 +23,32 @@ describe("A simple Express server", () => {
       .expect(200)
       .expect({ id: 6, title: "How to take photos", author: "Ashley" });
   });
+  it("[GET] /books?author=Carl ", () => {
+    return request(app)
+      .get("/books")
+      .query({ author: "Carl" })
+      .expect(200)
+      .expect([{ id: 1, title: "Introduction to DevOps", author: "Carl" }]);
+  });
+  it("[GET] /books?author=unknown ", () => {
+    return request(app)
+      .get("/books")
+      .query({ author: "unknown" })
+      .expect(200)
+      .expect([]);
+  });
+  it("[GET] /books?title=baking ", () => {
+    return request(app)
+      .get("/books")
+      .query({ title: "baking" })
+      .expect(200)
+      .expect([{ id: 2, title: "Introduction to baking", author: "Yun" }]);
+  });
+  it("[GET] /books?title=notfound ", () => {
+    return request(app)
+      .get("/books")
+      .query({ title: "notfound" })
+      .expect(200)
+      .expect([]);
+  });
 });

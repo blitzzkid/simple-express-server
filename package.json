@@ -8,6 +8,8 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.1.0",
+    "eslint": "^6.5.1",
+    "eslint-plugin-jest": "^22.17.0",
     "jest": "^24.9.0",
     "nodemon": "^1.19.3",
     "supertest": "^4.0.2"
@@ -16,7 +18,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "start": "node index.js",
-    "start:dev": "nodemon index.js"
+    "start:dev": "nodemon index.js",
+    "test:all": "npm run lint && npm run test"
   },
   "author": "",
   "license": "ISC"
