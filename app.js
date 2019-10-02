@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-const middleware = (res, req, next) => {
+const middleware = (req, res, next) => {
   next();
 };
 app.use(middleware);
