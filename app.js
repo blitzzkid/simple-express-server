@@ -11,7 +11,10 @@ app.use(express.json());
 const index = require("./routes/index");
 app.use("/", index);
 
-const books = require("./routes/books");
-app.use("/books", books);
+const Library = require("./routes/books");
+app.use("/books", Library);
+
+const Writer = require("./routes/authors");
+app.use("/authors", Writer);
 
 module.exports = app;

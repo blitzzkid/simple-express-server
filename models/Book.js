@@ -17,10 +17,30 @@ class Library {
   addNewBook(book) {
     this.books.push(book);
   }
-  filteredBooks(key, query) {
+  filteredBooks(query) {
+    const keys = Object.keys(query);
+
     return this.books.filter(book => {
-      return book[key].includes(query);
+      return keys.every(key => {
+        const regex = new RegExp(query[key], "gi");
+        return book[key].match(regex);
+      });
     });
+  }
+  updateBook(id, updatedBook) {
+    const index = this.books.findIndex(book => {
+      return book.id === id;
+    });
+    if (index === -1) {
+      throw new Error("This book does not exist");
+    }
+    this.books[index] = updatedBook;
+  }
+  removeBook(id) {
+    const bookId = this.getBookById(id);
+    const index = this.books.indexOf(bookId);
+    this.books.splice(index, 1);
+    return this.getAllBooks();
   }
 }
 
