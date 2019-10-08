@@ -1,4 +1,4 @@
-class Library {
+class Book {
   constructor() {
     this.books = [
       { id: 1, title: "Introduction to DevOps", author: "Carl" },
@@ -44,4 +44,4 @@ class Library {
   }
 }
 
-module.exports = new Library();
+module.exports = new Book();

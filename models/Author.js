@@ -1,4 +1,6 @@
-class Writer {
+const Book = require("./Book");
+
+class Author {
   constructor() {
     this.authors = [
       { id: 1, title: "Introduction to DevOps", author: "Carl" },
@@ -10,8 +12,12 @@ class Writer {
     return this.authors;
   }
   getAuthorById(id) {
-    return this.authors.find(author => author.id === id)
+    return this.authors.find(author => author.id === id);
+  }
+  getAllBooksByAuthor(id) {
+    const author = this.getAuthorById(id);
+    return Book.filteredBooks(author);
   }
 }
 
-module.exports = new Writer();
+module.exports = new Author();

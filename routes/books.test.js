@@ -1,5 +1,5 @@
 const request = require("supertest");
-const Library = require("../models/Book");
+const Book = require("../models/Book");
 jest.mock("../models/Book");
 const app = require("../app");
 
@@ -11,7 +11,7 @@ const mockData = [
 
 describe("A simple Express server", () => {
   it("[GET] /books should return all books", () => {
-    Library.getAllBooks.mockReturnValueOnce(mockData);
+    Book.getAllBooks.mockReturnValueOnce(mockData);
     return request(app)
       .get("/books")
       .expect(200)
@@ -22,7 +22,7 @@ describe("A simple Express server", () => {
       ]);
   });
   it("[GET] /books should return book with id 2", () => {
-    Library.getBookById.mockReturnValueOnce(mockData[1]);
+    Book.getBookById.mockReturnValueOnce(mockData[1]);
     return request(app)
       .get("/books/2")
       .expect(200)
@@ -30,7 +30,7 @@ describe("A simple Express server", () => {
   });
 
   it("[GET] /books?author=Carl ", () => {
-    Library.filteredBooks.mockReturnValueOnce([mockData[0]]);
+    Book.filteredBooks.mockReturnValueOnce([mockData[0]]);
     return request(app)
       .get("/books")
       .query({ author: "Carl" })
@@ -38,7 +38,7 @@ describe("A simple Express server", () => {
       .expect([{ id: 1, title: "Introduction to DevOps", author: "Carl" }]);
   });
   it("[GET] /books?author=unknown ", () => {
-    Library.filteredBooks.mockReturnValueOnce([]);
+    Book.filteredBooks.mockReturnValueOnce([]);
     return request(app)
       .get("/books")
       .query({ author: "unknown" })
@@ -46,7 +46,7 @@ describe("A simple Express server", () => {
       .expect([]);
   });
   it("[GET] /books?title=baking ", () => {
-    Library.filteredBooks.mockReturnValueOnce([mockData[1]]);
+    Book.filteredBooks.mockReturnValueOnce([mockData[1]]);
     return request(app)
       .get("/books")
       .query({ title: "baking" })
@@ -54,7 +54,7 @@ describe("A simple Express server", () => {
       .expect([{ id: 2, title: "Introduction to baking", author: "Yun" }]);
   });
   it("[GET] /books?title=notfound ", () => {
-    Library.filteredBooks.mockReturnValueOnce([]);
+    Book.filteredBooks.mockReturnValueOnce([]);
     return request(app)
       .get("/books")
       .query({ title: "notfound" })
@@ -62,7 +62,7 @@ describe("A simple Express server", () => {
       .expect([]);
   });
   it("[GET] /books?author=Carl&title=DevOps ", () => {
-    Library.filteredBooks.mockReturnValueOnce([mockData[0]]);
+    Book.filteredBooks.mockReturnValueOnce([mockData[0]]);
     return request(app)
       .get("/books")
       .query({ author: "Carl" })
@@ -82,10 +82,20 @@ describe("A simple Express server", () => {
       .expect(200)
       .expect({ id: 6, title: "How to write clean code", author: "Elson" })
       .expect(() => {
-        expect(Library.addNewBook).toHaveBeenCalledTimes(1);
+        expect(Book.addNewBook).toHaveBeenCalledTimes(1);
       });
   });
+
+  it("[PUT] /books returns 404 when id is not found", () => {
+    Book.updateBook.mockImplementationOnce(() => {
+      throw new Error();
+    });
+    return request(app)
+      .put("/books/100")
+      .expect(404);
+  });
   it("[PUT] /books updates the book", () => {
+    Book.updateBook.mockReset();
     const updatedBook = {
       id: 6,
       title: "How to write better clean code",
@@ -101,19 +111,11 @@ describe("A simple Express server", () => {
         author: "Elson"
       })
       .expect(() => {
-        expect(Library.updateBook).toHaveBeenCalledTimes(1);
+        expect(Book.updateBook).toHaveBeenCalledTimes(1);
       });
   });
-  it("[PUT] /books returns 404 when id is not found", () => {
-    Library.updateBook.mockImplementation(() => {
-      throw new Error();
-    });
-    return request(app)
-      .put("/books/100")
-      .expect(404);
-  });
   it("[DEL] /books deletes a book that is found by the id", () => {
-    Library.getAllBooks.mockReturnValueOnce([
+    Book.getAllBooks.mockReturnValueOnce([
       { id: 1, title: "Introduction to DevOps", author: "Carl" },
       { id: 2, title: "Introduction to baking", author: "Yun" },
       { id: 3, title: "Introduction to architecture", author: "LiShan" }
@@ -127,7 +129,7 @@ describe("A simple Express server", () => {
         { id: 3, title: "Introduction to architecture", author: "LiShan" }
       ])
       .expect(() => {
-        expect(Library.removeBook).toHaveBeenCalledTimes(1);
+        expect(Book.removeBook).toHaveBeenCalledTimes(1);
       });
   });
 });

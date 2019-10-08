@@ -1,36 +1,37 @@
 const express = require("express");
 const router = express.Router();
-const Library = require("../models/Book");
+const Book = require("../models/Book");
 
 router.get("/", (req, res) => {
   if (req.query.title || req.query.author) {
-    res.send(Library.filteredBooks(req.query));
+    res.send(Book.filteredBooks(req.query));
   }
-  res.send(Library.getAllBooks());
+  res.send(Book.getAllBooks());
 });
 router.get("/:id", (req, res) => {
-  const book = Library.getBookById(Number(req.params.id));
+  const book = Book.getBookById(Number(req.params.id));
   res.send(book);
 });
 router.post("/new", (req, res) => {
   const newBook = req.body;
-  Library.addNewBook(newBook);
+  Book.addNewBook(newBook);
   res.send(newBook);
 });
-router.put("/:id", (req, res) => {
+router.put("/:id", (req, res, next) => {
   try {
     const id = Number(req.params.id);
     const updatedBook = req.body;
-    Library.updateBook(id, updatedBook);
+    Book.updateBook(id, updatedBook);
     res.send(updatedBook);
   } catch (error) {
-    res.status(404).send(error.message);
+    error.status = 404;
+    next(error);
   }
 });
 router.delete("/:id", (req, res) => {
   const id = Number(req.params.id);
-  Library.removeBook(id);
-  res.send(Library.getAllBooks());
+  Book.removeBook(id);
+  res.send(Book.getAllBooks());
 });
 
 module.exports = router;
